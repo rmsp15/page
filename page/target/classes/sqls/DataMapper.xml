@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.board">
+
+	<sql id="test">
+		SEQ1 = #{seq}
+	</sql>
+
+<!-- 	<select id="getAllList" resultType="HkDto" parameterType="int"> -->
+<!-- 		SELECT SEQ,ID,NAME,TITLE,CONTENT,REGDATE  -->
+<!-- 		FROM HKBOARD  -->
+<!-- 		<where> -->
+<!-- 			<if test="seq!=null"> -->
+<!-- 			    <include refid="test" /> -->
+<!-- 			</if> -->
+<!-- 		</where> -->
+<!-- 	    ORDER BY REGDATE DESC -->
+<!-- 	</select> -->
+
+	<resultMap type="HkDto" id="HkDtoMap">
+		<result column="SEQ" property="seq" />
+		<result column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="REGDATE" property="regdate" />
+<!-- 		<collection property="dtoMap" resultMap="dtoMap"></collection> -->
+	</resultMap>
+
+	<resultMap type="Map" id="dtoMap">
+		<result column="SEQ" property="seq" />
+		<result column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="REGDATE" property="regdate" />
+	</resultMap>
+	
+	<select id="getAllList" resultMap="HkDtoMap" >
+		<![CDATA[
+			SELECT SEQ,ID,NAME,TITLE,CONTENT,REGDATE 
+			FROM HKBOARD 
+			ORDER BY REGDATE DESC		
+		]]>
+	</select>
+	
+	<select id="getboard" parameterType="int" resultType="HkDto">
+		<![CDATA[
+			SELECT SEQ,ID,NAME,TITLE,CONTENT,REGDATE 
+			FROM HKBOARD WHERE SEQ = #{seq}
+		]]>
+	</select>
+	
+	<insert id="insertboard" parameterType="HkDto">
+		<![CDATA[
+		INSERT INTO HKBOARD 
+		VALUES (HKBOARD_SEQ.NEXTVAL, #{id} , #{name} , #{title} , #{content} ,SYSDATE) 
+		]]>
+	</insert>
+
+	<update id="updateboard" parameterType="HkDto">
+		UPDATE HKBOARD SET 
+		TITLE=#{title}, CONTENT=#{content}, REGDATE=SYSDATE 
+		WHERE SEQ=#{seq} 
+	</update>
+	
+	<delete id="deleteboard" parameterType="int">
+		DELETE FROM HKBOARD WHERE SEQ=#{seq}
+	</delete>
+	
+	<delete id="muldel" parameterType="Map">
+		DELETE FROM HKBOARD WHERE SEQ IN 
+		<foreach collection="chks" item="i" separator="," open="(" close=")">
+			#{i}
+		</foreach>
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
